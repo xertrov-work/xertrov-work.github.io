@@ -30,9 +30,11 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType)
     <snip>
 ```
 
-Sweet, now all transactions are standard for our node. The next part is to relay transactions even when we can't validate the outputs they spend. When troubleshooting before I ran into [this error message](https://github.com/bitcoin/bitcoin/blob/23254131a3fdaeae9c50dafca6d0addbbf235820/src/rpcrawtransaction.cpp#L796) being thrown. To avoid more debugging I figured the best thing to do was just rip the whole block of code out. That is to say this:
+Sweet, now all transactions are standard for our node. The next part is to relay transactions even when we can't validate the outputs they spend. When troubleshooting before I ran into [this error message](https://github.com/bitcoin/bitcoin/blob/23254131a3fdaeae9c50dafca6d0addbbf235820/src/rpcrawtransaction.cpp#L796) in `rpcrawtransaction.cpp sendrawtransaction()` being thrown. To avoid more debugging I figured the best thing to do was just rip the whole block of code out. That is to say this:
 
 ```
+Value sendrawtransaction(const Array& params, bool fHelp)
+{
 <snip>
     bool fHaveChain = existingCoins && existingCoins->nHeight < 1000000000;
     if (!fHaveMempool && !fHaveChain) {
